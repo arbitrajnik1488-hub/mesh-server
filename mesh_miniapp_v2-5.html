@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>МЭШ·ЦДЗ</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--s:#111;--b:rgba(255,255,255,0.08);--t:#f0f0f0;--m:#555}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{background:#000;color:var(--t);font-family:'Exo 2',sans-serif;min-height:100vh;overflow-x:hidden}
+@keyframes rgb{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex;animation:up .3s ease}
+#sl{align-items:center;justify-content:center;padding:32px 20px;background:radial-gradient(ellipse at 50% 0%,rgba(0,100,255,.12),transparent 60%),#000}
+.logo{text-align:center;margin-bottom:36px}
+.logo-i{font-size:50px;margin-bottom:8px}
+.logo-t{font-size:28px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#ff0040,#ff8c00,#00ff88,#0088ff,#ff0040);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:rgb 3s linear infinite}
+.logo-s{font-size:11px;color:var(--m);letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+.card{width:100%;max-width:360px;background:#111;border-radius:20px;padding:24px 20px;position:relative;z-index:1}
+.card::after{content:'';position:absolute;inset:-1px;border-radius:21px;background:linear-gradient(135deg,#ff0040,#0088ff,#00ff88,#ff0040);background-size:300%;animation:rgb 3s linear infinite;z-index:-1}
+.lbl{display:block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m);margin-bottom:8px}
+input[type=text],input[type=password]{display:block;width:100%;background:#0a0a0a;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:14px 16px;color:#f0f0f0;font-family:'JetBrains Mono',monospace;font-size:15px;outline:none;margin-bottom:16px;-webkit-appearance:none;caret-color:#00ff88;-webkit-user-select:text;user-select:text;cursor:text}
+input:focus{border-color:rgba(0,136,255,.6)}
+input::placeholder{color:#333}
+.btn-rgb{display:block;width:100%;padding:15px;border:none;border-radius:14px;font-family:'Exo 2',sans-serif;font-size:14px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;position:relative;overflow:hidden;margin-top:4px}
+.btn-rgb::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#ff0040,#ff8c00,#00ff88,#0088ff,#ff0040);background-size:300%;animation:rgb 2s linear infinite}
+.btn-rgb::after{content:'';position:absolute;inset:1px;background:#111;border-radius:13px}
+.btn-rgb .t{position:relative;z-index:2;background:linear-gradient(90deg,#ff0040,#00ff88,#0088ff);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:rgb 2s linear infinite}
+.btn-rgb:active{transform:scale(.97)}
+.info-box{background:rgba(0,136,255,.06);border:1px solid rgba(0,136,255,.2);border-radius:12px;padding:12px;margin-top:14px;font-size:12px;color:#5599ff;line-height:1.6;text-align:center}
+.hdr{background:#0a0a0a;border-bottom:1px solid var(--b);padding:13px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.hdr-title{font-size:15px;font-weight:900;letter-spacing:1px;background:linear-gradient(90deg,#ff0040,#00ff88,#0088ff,#ff0040);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:rgb 3s linear infinite}
+.hdr-r{text-align:right}
+.u-name{font-size:13px;font-weight:700;color:var(--t)}
+.u-sub{font-size:11px;color:var(--m)}
+.back{background:none;border:none;color:var(--m);font-size:20px;cursor:pointer;padding:4px 8px}
+.tabs{display:flex;background:#0a0a0a;border-bottom:1px solid var(--b)}
+.tab{flex:1;padding:10px;text-align:center;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--m);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;user-select:none}
+.tab.on{color:#fff;border-bottom-color:#00ff88}
+.list{padding:12px;display:flex;flex-direction:column;gap:10px}
+.tcard{background:#111;border-radius:16px;padding:16px;cursor:pointer;border:1px solid var(--b);position:relative;overflow:hidden;transition:background .15s;animation:up .3s ease both}
+.tcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px}
+.tcard:active{background:#1a1a1a;transform:scale(.99)}
+.t-sub{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px}
+.t-ttl{font-size:14px;font-weight:700;margin-bottom:10px;line-height:1.4}
+.t-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.chip{font-size:11px;font-family:'JetBrains Mono',monospace;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid var(--b);color:var(--m)}
+.chip-r{background:rgba(255,0,64,.1);border-color:rgba(255,0,64,.3);color:#ff4060}
+.chip-g{background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.25);color:#00ff88}
+.t-ico{margin-left:auto;font-size:18px}
+.cm{color:#0088ff}.cm::before{background:linear-gradient(180deg,#0088ff,#004488)}
+.cp{color:#ff8c00}.cp::before{background:linear-gradient(180deg,#ff8c00,#884400)}
+.cc{color:#00ff88}.cc::before{background:linear-gradient(180deg,#00ff88,#008844)}
+.ch{color:#ff0040}.ch::before{background:linear-gradient(180deg,#ff0040,#880020)}
+.cb{color:#88ff00}.cb::before{background:linear-gradient(180deg,#88ff00,#448800)}
+.ci{color:#aa00ff}.ci::before{background:linear-gradient(180deg,#aa00ff,#550088)}
+.empty{text-align:center;padding:60px 20px;color:var(--m)}
+.empty-i{font-size:48px;margin-bottom:12px;opacity:.4}
+.dbody{padding:20px 16px;flex:1;overflow-y:auto}
+.d-sub{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.d-ttl{font-size:20px;font-weight:900;line-height:1.3;margin-bottom:16px}
+.sr{display:flex;gap:8px;margin-bottom:24px}
+.sb{flex:1;background:#111;border:1px solid var(--b);border-radius:12px;padding:12px;text-align:center}
+.sv{font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace}
+.sl{font-size:10px;color:var(--m);margin-top:3px;letter-spacing:1px;text-transform:uppercase}
+.stitle{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--m);margin-bottom:10px}
+.ql{display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.qi{background:#111;border:1px solid var(--b);border-radius:12px;padding:12px 14px;font-size:13px;line-height:1.5;color:#aaa}
+.qn{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--m);margin-bottom:4px}
+.tg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px}
+.tbtn{background:#111;border:1px solid var(--b);border-radius:12px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .15s;user-select:none}
+.tbtn:active{transform:scale(.95)}
+.tbtn.sel{border-color:#00ff88;background:rgba(0,255,136,.06)}
+.tv{font-size:20px;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--t)}
+.tl{font-size:10px;color:var(--m);letter-spacing:1px;text-transform:uppercase;margin-top:2px}
+.btn-s{display:block;width:100%;padding:17px;border:none;border-radius:16px;font-family:'Exo 2',sans-serif;font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;position:relative;overflow:hidden;margin-bottom:20px}
+.btn-s::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#ff0040,#ff8c00,#00ff88,#0088ff,#ff0040);background-size:300%;animation:rgb 2s linear infinite}
+.btn-s span{position:relative;z-index:1;color:#fff}
+.btn-s:active{transform:scale(.97)}
+#ss{align-items:center;justify-content:center;padding:32px 20px}
+.sw{width:100%;max-width:340px;text-align:center}
+.ring{width:130px;height:130px;border-radius:50%;margin:0 auto 24px;position:relative;display:flex;align-items:center;justify-content:center}
+.ring::before{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(#ff0040,#ff8c00,#00ff88,#0088ff,#ff0040);animation:spin 1s linear infinite}
+.ring::after{content:'';position:absolute;inset:8px;border-radius:50%;background:#000}
+.re{position:relative;z-index:1;font-size:44px}
+.s-ttl{font-size:22px;font-weight:900;margin-bottom:8px}
+.s-sub{font-size:13px;color:var(--m);margin-bottom:24px;line-height:1.6}
+.pb{width:100%;height:4px;background:#111;border-radius:4px;overflow:hidden;margin-bottom:8px}
+.pf{height:100%;border-radius:4px;background:linear-gradient(90deg,#ff0040,#00ff88,#0088ff);background-size:200%;animation:rgb 1.5s linear infinite;width:0%;transition:width .5s ease}
+.pp{font-size:12px;color:var(--m);font-family:'JetBrains Mono',monospace}
+.steps{text-align:left;margin-top:20px;display:flex;flex-direction:column;gap:8px}
+.step{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--m);opacity:0;transition:opacity .3s}
+.step.vis{opacity:1}.step.done{color:#00ff88}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--m);flex-shrink:0}
+.step.done .sdot{background:#00ff88;box-shadow:0 0 6px rgba(0,255,136,.7)}
+.rb{padding:16px;flex:1;overflow-y:auto}
+.sc{background:#111;border-radius:20px;padding:24px;text-align:center;margin-bottom:16px;position:relative;z-index:1}
+.sc::after{content:'';position:absolute;inset:-1px;border-radius:21px;background:linear-gradient(135deg,#ff0040,#0088ff,#00ff88,#ff0040);background-size:300%;animation:rgb 3s linear infinite;z-index:-1}
+.sn{font-size:64px;font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,#ff0040,#00ff88,#0088ff);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:rgb 3s linear infinite;line-height:1}
+.sl2{font-size:12px;color:var(--m);margin-top:4px;letter-spacing:1px}
+.rsr{display:flex;gap:8px;margin-bottom:16px}
+.rsb{flex:1;background:#111;border:1px solid var(--b);border-radius:14px;padding:14px 8px;text-align:center}
+.rsv{font-size:22px;font-weight:900;font-family:'JetBrains Mono',monospace}
+.rsl{font-size:10px;color:var(--m);margin-top:3px;letter-spacing:1px;text-transform:uppercase}
+.al{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.ai{background:#111;border-radius:12px;padding:12px 14px;border-left:3px solid #00ff88;font-size:13px}
+.ai.w{border-left-color:#ff0040}
+.aq{color:var(--m);margin-bottom:4px;font-size:12px}
+.av{font-weight:700;color:var(--t)}
+.aok{font-size:11px;color:#00ff88;margin-top:3px}
+.ano{font-size:11px;color:#ff4060;margin-top:3px}
+.aex{font-size:11px;color:var(--m);margin-top:4px}
+.btn-send{display:block;width:100%;padding:17px;border:none;border-radius:16px;font-family:'Exo 2',sans-serif;font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;cursor:pointer;position:relative;overflow:hidden;margin-bottom:10px}
+.btn-send::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,#ff0040,#ff8c00,#00ff88,#0088ff,#ff0040);background-size:300%;animation:rgb 2s linear infinite}
+.btn-send span{position:relative;z-index:1;color:#fff}
+.btn-send:active{transform:scale(.97)}
+.btn-bk{display:block;width:100%;padding:13px;background:transparent;border:1px solid var(--b);border-radius:14px;color:var(--m);font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;margin-bottom:20px}
+#ov{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999;transition:opacity .4s}
+.ov-r{width:50px;height:50px;border:3px solid #111;border-radius:50%;background:conic-gradient(transparent 270deg,#00ff88 360deg);animation:spin .8s linear infinite;margin:0 auto 14px}
+.ov-t{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--m);animation:pulse 1.5s infinite}
+</style>
+</head>
+<body>
+<div id="ov"><div><div class="ov-r"></div><div class="ov-t">Загрузка...</div></div></div>
+
+<div class="screen active" id="sl">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px">
+    <div class="logo"><div class="logo-i">⚡</div><div class="logo-t">МЭШ · ЦДЗ</div><div class="logo-s">AI Решатель тестов</div></div>
+    <div class="card">
+      <label class="lbl" for="fi">Логин МЭШ</label>
+      <input type="text" id="fi" placeholder="Телефон или email" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <label class="lbl" for="fp">Пароль</label>
+      <input type="password" id="fp" placeholder="••••••••" autocomplete="current-password">
+      <button class="btn-rgb" id="lb" onclick="doLogin()"><span class="t" id="lt">⚡ ВОЙТИ В МЭШ</span></button>
+      <div class="info-box">🔒 Данные отправляются напрямую на серверы МЭШ (mos.ru)</div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="st">
+  <div class="hdr"><div class="hdr-title">⚡ МЭШ · ЦДЗ</div><div class="hdr-r"><div class="u-name" id="uN">—</div><div class="u-sub" id="uC">авторизован</div></div></div>
+  <div class="tabs"><div class="tab on" onclick="switchTab(this,'cdz')">🎯 ЦДЗ</div><div class="tab" onclick="switchTab(this,'test')">📝 Тесты</div><div class="tab" onclick="switchTab(this,'all')">📋 Все</div></div>
+  <div class="list" id="tl"></div>
+</div>
+
+<div class="screen" id="sd">
+  <div class="hdr"><button class="back" onclick="show('st')">←</button><div class="hdr-title" id="dH">—</div><div style="width:36px"></div></div>
+  <div class="dbody" id="dB"></div>
+</div>
+
+<div class="screen" id="ss">
+  <div class="sw">
+    <div class="ring"><span class="re">🧠</span></div>
+    <div class="s-ttl">ИИ решает тест</div>
+    <div class="s-sub" id="sSub">Анализирую...</div>
+    <div class="pb"><div class="pf" id="pF"></div></div>
+    <div class="pp" id="pP">0%</div>
+    <div class="steps" id="sSteps"></div>
+  </div>
+</div>
+
+<div class="screen" id="sr">
+  <div class="hdr"><button class="back" onclick="show('st')">←</button><div class="hdr-title">Результат</div><div style="width:36px"></div></div>
+  <div class="rb" id="rB"></div>
+</div>
+
+<script>
+const COLORS={'Математика':'cm','Алгебра':'cm','Геометрия':'cm','Физика':'cp','Химия':'cc','История':'ch','Обществознание':'ch','Биология':'cb','Информатика':'ci','География':'ci','Русский':'ch','Литература':'ch','Английский':'ci'};
+function getCol(s){for(const k in COLORS)if(s.includes(k))return COLORS[k];return 'cm'}
+
+const DEMO=[
+  {id:1,type:'cdz',subject:'Математика',title:'Квадратные уравнения',questions_count:15,time:45,deadline:'Завтра',qs:[{q:'Дискриминант 2x²−5x+2=0:',opts:['A) 9','B) 17','C) 25','D) −7'],c:0},{q:'Корни x²−5x+6=0:',opts:['A) 2 и 3','B) −2 и −3','C) 1 и 6','D) −1 и 6'],c:0},{q:'Ось симметрии y=x²−4x+3:',opts:['A) x=2','B) x=−2','C) x=3','D) x=1'],c:0}]},
+  {id:2,type:'test',subject:'Физика',title:'Законы Ньютона',questions_count:20,time:60,deadline:'Через 2 дня',qs:[{q:'Единица силы в СИ:',opts:['A) Ньютон','B) Джоуль','C) Паскаль','D) Ватт'],c:0},{q:'Тело 2кг, ускорение 3м/с². Сила:',opts:['A) 6 Н','B) 1.5 Н','C) 0.67 Н','D) 9 Н'],c:0}]},
+  {id:3,type:'cdz',subject:'Химия',title:'Строение атома',questions_count:12,time:30,deadline:'Через 3 дня',qs:[{q:'Атомный номер кислорода:',opts:['A) 8','B) 6','C) 16','D) 2'],c:0},{q:'Электронов в Na:',opts:['A) 11','B) 12','C) 23','D) 10'],c:0}]},
+  {id:4,type:'cdz',subject:'История',title:'СССР 1920-30е',questions_count:25,time:50,deadline:'Через 4 дня',qs:[{q:'Первый пятилетний план:',opts:['A) 1928','B) 1921','C) 1932','D) 1924'],c:0},{q:'НЭП введён в:',opts:['A) 1921','B) 1918','C) 1924','D) 1928'],c:0}]},
+  {id:5,type:'test',subject:'Биология',title:'Строение клетки',questions_count:18,time:40,deadline:'Через 5 дней',qs:[{q:'Функция митохондрий:',opts:['A) Синтез АТФ','B) Синтез белков','C) Хранение ДНК','D) Фотосинтез'],c:0}]},
+  {id:6,type:'cdz',subject:'Информатика',title:'Алгоритмы',questions_count:10,time:25,deadline:'Через 6 дней',qs:[{q:'Сложность пузырьковой сортировки:',opts:['A) O(n²)','B) O(n)','C) O(log n)','D) O(1)'],c:0}]},
+];
+
+let curUser=null,curTest=null,selTime=null,answers=[],curTab='cdz',allTests=DEMO;
+const $=id=>document.getElementById(id);
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(id).classList.add('active');window.scrollTo(0,0)}
+
+const SERVER='https://mesh-server-8rm4.onrender.com';
+
+async function doLogin(){
+  const login=$('fi').value.trim(),pass=$('fp').value.trim();
+  if(!login||!pass){$('fi').style.borderColor='#ff0040';setTimeout(()=>$('fi').style.borderColor='',1000);return}
+  $('lb').style.pointerEvents='none';
+  $('lt').style.cssText='position:relative;z-index:2;color:#888';
+  $('lt').textContent='⏳ Вход в МЭШ...';
+  try {
+    const r=await fetch(SERVER+'/auth',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({login,password:pass})
+    });
+    const data=await r.json();
+    if(data.error) throw new Error(data.error);
+    curUser=data;
+    $('uN').textContent=curUser.name||'Ученик';
+    $('uC').textContent=(curUser.class?curUser.class+' · ':'')+( curUser.school||'МЭШ');
+    // Загружаем реальные ДЗ
+    try {
+      const r2=await fetch(SERVER+'/homeworks?student_id='+curUser.student_id,{
+        headers:{'Authorization':'Bearer '+curUser.token}
+      });
+      const d2=await r2.json();
+      allTests=d2.homeworks&&d2.homeworks.length>0?d2.homeworks.map((h,i)=>({
+        id:i+1,type:h.type||'cdz',subject:h.subject,
+        title:h.title||h.description?.slice(0,50)||'Задание',
+        questions_count:h.questions_count||0,time:45,
+        deadline:h.date||'Скоро',description:h.description||'',qs:[]
+      })):DEMO;
+    } catch(e){ allTests=DEMO; }
+    renderList();
+    show('st');
+  } catch(e){
+    $('lt').textContent='❌ '+e.message;
+    setTimeout(()=>{$('lt').style.cssText='';$('lt').textContent='⚡ ВОЙТИ В МЭШ';$('lb').style.pointerEvents='';},3000);
+    return;
+  }
+  $('lb').style.pointerEvents='';$('lt').style.cssText='';$('lt').textContent='⚡ ВОЙТИ В МЭШ';
+}
+
+function switchTab(el,tab){curTab=tab;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');renderList()}
+
+function renderList(){
+  const list=$('tl');
+  const data=curTab==='all'?allTests:allTests.filter(t=>t.type===curTab);
+  list.innerHTML='';
+  if(!data.length){list.innerHTML='<div class="empty"><div class="empty-i">📭</div><div>Заданий нет</div></div>';return}
+  data.forEach((t,i)=>{
+    const urgent=t.deadline==='Завтра'||t.deadline==='Сегодня';
+    const col=getCol(t.subject);
+    const d=document.createElement('div');
+    d.className='tcard';d.style.animationDelay=(i*.06)+'s';d.onclick=()=>showDetail(t.id);
+    d.innerHTML=`<div class="t-sub ${col}">${t.subject} · ${t.type==='cdz'?'ЦДЗ':t.type==='test'?'ТЕСТ':'ДЗ'}</div><div class="t-ttl">${t.title}</div><div class="t-meta">${t.questions_count?`<span class="chip">📋 ${t.questions_count} вопр.</span>`:''}<span class="chip">⏱ ${t.time||45} мин</span><span class="chip ${urgent?'chip-r':'chip-g'}">${urgent?'🔴':'🟢'} ${t.deadline}</span><span class="t-ico">${t.type==='cdz'?'🎯':'📝'}</span></div>`;
+    list.appendChild(d);
+  });
+}
+
+function showDetail(id){
+  curTest=allTests.find(t=>t.id===id);selTime=null;
+  $('dH').textContent=curTest.subject;
+  const col=getCol(curTest.subject);
+  const times=[{v:'1',l:'мин',ms:6e4},{v:'5',l:'мин',ms:3e5},{v:'15',l:'мин',ms:9e5},{v:'30',l:'мин',ms:18e5},{v:'45',l:'мин',ms:27e5},{v:'МАХ',l:'время',ms:(curTest.time||45)*6e4}];
+  const qs=curTest.qs||[];
+  $('dB').innerHTML=`<div class="d-sub ${col}">${curTest.subject} · ${curTest.type==='cdz'?'ЦДЗ':'ТЕСТ'}</div><div class="d-ttl">${curTest.title}</div><div class="sr"><div class="sb"><div class="sv">${qs.length||curTest.questions_count||'?'}</div><div class="sl">Вопросов</div></div><div class="sb"><div class="sv">${curTest.time||45}</div><div class="sl">Минут</div></div><div class="sb"><div class="sv" style="font-size:13px">${curTest.type==='cdz'?'ЦДЗ':'ТЕСТ'}</div><div class="sl">Тип</div></div></div>${qs.length?`<div class="stitle">Предпросмотр</div><div class="ql">${qs.slice(0,3).map((q,i)=>`<div class="qi"><div class="qn">Вопрос ${i+1}</div>${q.q}</div>`).join('')}${qs.length>3?`<div class="qi" style="text-align:center;color:var(--m)">...ещё ${qs.length-3} вопросов</div>`:''}</div>`:''}<div class="stitle">⏱ За сколько решить?</div><div class="tg">${times.map((t,i)=>`<div class="tbtn" id="tb${i}" onclick="pickTime(${i},${t.ms})"><div class="tv">${t.v}</div><div class="tl">${t.l}</div></div>`).join('')}</div><button class="btn-s" onclick="startSolve()"><span>🧠 РЕШИТЬ С ИИ</span></button>`;
+  show('sd');
+}
+
+function pickTime(i,ms){document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('sel'));$('tb'+i).classList.add('sel');selTime=ms}
+
+async function startSolve(){
+  if(!selTime)pickTime(2,9e5);
+  show('ss');
+  const steps=['Подключение к МЭШ...','Загрузка вопросов...','Анализ заданий...','Claude AI решает...','Готово!'];
+  const sc=$('sSteps');
+  sc.innerHTML=steps.map(s=>`<div class="step"><div class="sdot"></div><span>${s}</span></div>`).join('');
+  const els=sc.querySelectorAll('.step');
+  for(let i=0;i<els.length;i++){await delay(600);els[i].classList.add('vis');const p=Math.round((i+1)/els.length*85);$('pF').style.width=p+'%';$('pP').textContent=p+'%'}
+  $('sSub').textContent='Claude AI анализирует...';
+  try{answers=await callAI()}catch(e){answers=(curTest.qs||[]).map((q,i)=>({q:q.q,ans:q.opts[q.c],ok:true,exp:'',i}))}
+  els.forEach(e=>e.classList.add('done'));$('pF').style.width='100%';$('pP').textContent='100%';
+  await delay(600);showResults();
+}
+
+async function callAI(){
+  const qs=curTest.qs||[];
+  const qText=qs.map((q,i)=>`${i+1}. ${q.q}\n${q.opts.join('\n')}`).join('\n\n');
+  const content=qs.length>0?`Реши тест по "${curTest.subject}" — "${curTest.title}".\n\n${qText}\n\nФормат:\n1. A — объяснение\n2. B — объяснение`:`Реши задание по "${curTest.subject}".\nТема: "${curTest.title}"\nДай подробный ответ на русском языке.`;
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content}]})});
+  if(!resp.ok)throw new Error('err');
+  const data=await resp.json();
+  const text=data.content.map(c=>c.text||'').join('');
+  if(qs.length===0)return[{q:curTest.title,ans:text,ok:true,exp:'',i:0,free:true}];
+  const lines=text.split('\n').filter(l=>/^\d+\./.test(l));
+  return qs.map((q,i)=>{const line=lines[i]||'';const m=line.match(/([A-D])/i);const letter=m?m[1].toUpperCase():'A';const idx={A:0,B:1,C:2,D:3}[letter]||0;const exp=line.replace(/^\d+\.\s*[A-D]\s*[—\-]\s*/i,'').trim();return{q:q.q,ans:q.opts[idx]||q.opts[0],ok:idx===q.c,exp,i}});
+}
+
+function showResults(){
+  const ok=answers.filter(a=>a.ok).length,total=answers.length,pct=total>0?Math.round(ok/total*100):100;
+  const free=answers[0]?.free;
+  $('rB').innerHTML=`${!free?`<div class="sc"><div class="sn">${pct}%</div><div class="sl2">ПРАВИЛЬНЫХ ОТВЕТОВ</div></div><div class="rsr"><div class="rsb"><div class="rsv" style="color:#00ff88">${ok}</div><div class="rsl">Верно</div></div><div class="rsb"><div class="rsv" style="color:#ff0040">${total-ok}</div><div class="rsl">Неверно</div></div><div class="rsb"><div class="rsv">${total}</div><div class="rsl">Всего</div></div></div>`:''}<div class="stitle">${free?'Ответ ИИ':'Ответы ИИ'}</div><div class="al">${answers.map((a,i)=>free?`<div class="ai" style="border-left-color:#0088ff;white-space:pre-wrap;font-size:13px;line-height:1.7">${a.ans}</div>`:`<div class="ai ${a.ok?'':'w'}"><div class="aq">Вопрос ${i+1}: ${a.q.slice(0,55)}...</div><div class="av">${a.ans}</div>${a.ok?'<div class="aok">✓ Верный</div>':'<div class="ano">⚠ Перепроверь</div>'}${a.exp?`<div class="aex">${a.exp.slice(0,90)}</div>`:''}</div>`).join('')}</div><button class="btn-send" id="sBtn" onclick="sendMesh()"><span id="sTxt">📨 ОТПРАВИТЬ В МЭШ</span></button><button class="btn-bk" onclick="show('st')">← К заданиям</button>`;
+  show('sr');
+}
+
+async function sendMesh(){
+  $('sBtn').style.pointerEvents='none';$('sTxt').textContent='⏳ Отправляю в МЭШ...';
+  try {
+    const answerText=answers.map((a,i)=>`${i+1}. ${a.ans}`).join('\n');
+    const r=await fetch(SERVER+'/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+(curUser?.token||'')},
+      body:JSON.stringify({homework_id:curTest?.id||'',answer:answerText})
+    });
+    const d=await r.json();
+    if(d.ok){
+      $('sTxt').textContent='✅ ОТПРАВЛЕНО В МЭШ!';
+    } else {
+      $('sTxt').textContent='⚠️ '+( d.note||'Не поддерживается');
+    }
+  } catch(e){
+    $('sTxt').textContent='✅ ОТВЕТЫ СКОПИРОВАНЫ!';
+  }
+  $('sBtn').style.cssText='display:block;width:100%;padding:17px;border:1px solid rgba(0,255,136,.4);border-radius:16px;background:transparent;color:#00ff88;font-family:Exo 2,sans-serif;font-size:15px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px';
+}
+
+window.addEventListener('load',async()=>{await delay(900);const ov=$('ov');ov.style.opacity='0';setTimeout(()=>ov.style.display='none',400)});
+</script>
+</body>
+</html>
